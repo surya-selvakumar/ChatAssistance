@@ -46,37 +46,59 @@ def detect_trauma(text):
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
+  
     if request.method == 'POST':
-        username = request.form['username']
+        email = request.form['email']
         password = request.form['password']
+
+        print('user {username} password {password} ')
         
-        if username in users.keys() and users[username] == password:
-            return redirect(url_for('chat'))
+        # if username in users.keys() and users[username] == password:
+        return redirect(url_for('chat'))
         
         error = 'Invalid username or password'
-        return render_template('login.html', error=error)
+        return render_template('Login.html', error=error)
     
-    return render_template('login.html')
+    return render_template('Login.html')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        username = request.form['username']
+        email = request.form['email']
         password = request.form['password']
+        confirmPassword = request.form['confirm-password']
 
-        users[username] = password
+        print('user {email} password {password} confirm passs {confirmPassword}')
+
+        users[email] = password
         with open('details.json', 'w') as jf:
             json.dump(users, jf)
 
         return redirect(url_for('login'))
     
-    return render_template('signup.html')
+    return render_template('Signup.html')
 
 
 @app.route('/chat')
 def chat():
-    return render_template('chat.html')
+    return render_template('Chat.html', )
+
+    #[1 ,2 ,3,4 ]
+
+@app.route('/voice')
+def voice():
+    return render_template('Voice.html')
+
+@app.route('/doctor')
+def doctor():
+    #pass me a map in a html  and the doctor name address and distance 
+    return render_template('Doctor.html')
+
+@app.route('/patient')
+def patient():
+    #frontend will send the patient details
+    return render_template('Patient.html',)
 
 
 @app.route('/analyze_audio')
@@ -96,10 +118,7 @@ def analyze_audio():
 
             trauma_state = detect_trauma(audio_text)
 
-            return trauma_state
+        #     return trauma_state (success , 1) (harmful ,0)
 
-
-
-
-        
-
+if __name__ == '__main__':
+    app.run(debug=True)
