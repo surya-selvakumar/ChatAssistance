@@ -1,0 +1,200 @@
+@import url("https://fonts.googleapis.com/css2?family=Catamaran:wght@100;200;300;400;500;600;700;800;900&family=Noto+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+/* Styles for the voice interface */
+
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0;
+}
+
+/* Sidebar styles */
+.sidebar {
+  height: 100vh;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  background-color: #1966ff;
+  padding-top: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul {
+  margin-top: 40%;
+  width: 100%;
+}
+
+.list {
+  margin: 30px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar ul li {
+  margin-bottom: 10px;
+}
+
+.sidebar a {
+  color: #fff;
+  text-decoration: none;
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  display: block;
+  padding: 10px;
+  transition: 0.3s;
+}
+
+.sidebar li:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.selected {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.doctor {
+  display: flex;
+  flex: 3.5;
+  align-items: center;
+  height: 100vh;
+  padding: 0px 20px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+
+h2 {
+  color: #242f48;
+  font-family: Catamaran;
+  margin-left: 40px;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.details {
+  display: flex;
+  margin-left: 40px;
+  gap: 80px;
+}
+
+.address {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: start;
+  justify-content: center;
+}
+label {
+  padding: 10px;
+  color: #242f48;
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+span {
+  color: #242f48;
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+button {
+  display: flex;
+  width: 310px;
+  padding: 17px;
+  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 14px;
+  border: none;
+  background: var(--blue-blue-500, #1b85f3);
+  color: var(--grey-white, #fff);
+  text-align: center;
+  font-family: Noto Sans;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+
+.modal{
+    width: 400px;
+    padding: 40px 20px;
+    border-radius: 24px;
+    background: var(--grey-white, #fff);
+    display: none;
+    z-index: 100;
+    position: absolute;
+    top: 30%;
+    left: 40%;
+    box-shadow: 0px 4px 20px -2px rgba(50, 50, 71, 0.02),
+      0px 0px 8px 0px rgba(12, 26, 75, 0.1);
+  }
+
+  
+.modal-content {
+    gap: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  p {
+    color: var(--grey-grey-800, #39434f);
+    text-align: center;
+  
+    /* Desktop/Header/Heading 1 */
+    font-family: Catamaran;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 42px; /* 116.667% */
+  }
+  h4 {
+    color: #1a66ff;
+    text-align: center;
+  
+    /* Desktop/Body/Medium 16px */
+    font-family: Noto Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px; /* 150% */
+  }
+  
+
+  #modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(211, 211, 211, 0.7); /* Light gray with some transparency */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9; /* Ensure it's above other content */
+  }
+  
