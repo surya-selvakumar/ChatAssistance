@@ -134,8 +134,18 @@ def doctor():
     #pass me a map in a html  and the doctor name address and distance 
     return render_template('Doctor.html')
 
-@app.route('/patient')
+@app.route('/patient' , methods=['POST', 'GET'])
 def patient():
+    if request.method == 'POST':
+        data = request.get_json()  # Get the JSON data from the request
+        print("Data received from the form:")
+        print(data)  # Print the received data
+
+        # You can process and store the data as needed
+
+        response = {'message': 'Data received successfully'}
+        return jsonify(response)
+     
     #frontend will send the patient details
     return render_template('Patient.html',)
 
