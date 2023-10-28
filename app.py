@@ -6,6 +6,7 @@ import speech_recognition as sr
 from transformers import pipeline
 import json
 from utils import audio_to_text, detect_trauma
+import utils
 
 app = Flask(__name__)
 
@@ -78,10 +79,13 @@ def chat():
 
     return render_template('Chat.html', chat_qns)
 
-    #[1 ,2 ,3,4]
+
 
 @app.route('/voice')
 def voice():
+
+    states = {0:'From your audio feed, our model estimates that you in a traumatic state. Please visit the doctor connect page and book a consultation',
+              1:"From your audio feed, our model estimates that you are in a healthy state"}
 
     if request.method == 'POST':
         if 'file' not in request.files:
@@ -98,7 +102,8 @@ def voice():
 
             trauma_state = detect_trauma(audio_text)
 
-    return render_template('Voice.html')
+    return render_template('Voice.html', states[int(trauma_state)], int(trauma_state))
+
 
 @app.route('/doctor')
 def doctor():
