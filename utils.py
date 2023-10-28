@@ -2,8 +2,13 @@ import requests
 import folium
 from geopy.geocoders import Nominatim
 import pandas as pd
+import os
+from gtts import gTTS
+import speech_recognition as sr
+from transformers import pipeline
+import json
 
-
+sentiment_model = pipeline('sentiment-analysis')
 
 
 def get_lat_long_from_address(address):
@@ -55,3 +60,22 @@ def get_nearest(my_lat, my_long):
 
     return response.json()
 
+
+
+def audio_to_text(audio_file_path):
+    recognizer = sr.Recognizer()
+    with sr.AudioFile(audio_file_path) as source:
+        audio = recognizer.record(source)
+
+        try:
+            text = recognizer.recognize_google(audio)
+            return text
+        except:
+            return 'Error'
+        
+
+def detect_trauma(text):
+    result = sentiment_model(text)
+    class_dict = {'POSITIVE':True, 'NEGATIVE':False}
+
+    return class_dict[result[0]['label']]

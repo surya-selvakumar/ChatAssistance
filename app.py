@@ -5,10 +5,11 @@ from gtts import gTTS
 import speech_recognition as sr
 from transformers import pipeline
 import json
+from utils import audio_to_text, detect_trauma
 
 app = Flask(__name__)
 
-sentiment_model = pipeline('sentiment-analysis')
+
 
 try:
     os.makedirs(app.instance_path)
@@ -22,25 +23,6 @@ with open('details.json', 'r') as f:
 
 UPLOAD_FOLDER = os.path.join(app.instance_path, '/uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
-def audio_to_text(audio_file_path):
-    recognizer = sr.Recognizer()
-    with sr.AudioFile(audio_file_path) as source:
-        audio = recognizer.record(source)
-
-        try:
-            text = recognizer.recognize_google(audio)
-            return text
-        except:
-            return 'Error'
-        
-
-def detect_trauma(text):
-    result = sentiment_model(text)
-    class_dict = {'POSITIVE':True, 'NEGATIVE':False}
-
-    return class_dict[result[0]['label']]
 
 
 
@@ -82,27 +64,25 @@ def signup():
 
 @app.route('/chat')
 def chat():
-    return render_template('Chat.html', )
+    with open('chat.json', 'r') as jf:
+        chat_qns = json.load(jf)
 
-    #[1 ,2 ,3,4 ]
+    states = {0:'From your texts, our model estimates that you in a traumatic state. Please visit the doctor connect page and book a consultation',
+              1:"From your texts, our model estimates that you are in a healthy state"}
+
+    if request.method == 'POST':
+        texts = request.form['form_data']
+        trauma_state_chat = detect_trauma(texts)
+            
+        return render_template('Chat.html', states[int(trauma_state_chat)])
+
+    return render_template('Chat.html', chat_qns)
+
+    #[1 ,2 ,3,4]
 
 @app.route('/voice')
 def voice():
-    return render_template('Voice.html')
 
-@app.route('/doctor')
-def doctor():
-    #pass me a map in a html  and the doctor name address and distance 
-    return render_template('Doctor.html')
-
-@app.route('/patient')
-def patient():
-    #frontend will send the patient details
-    return render_template('Patient.html',)
-
-
-@app.route('/analyze_audio')
-def analyze_audio():
     if request.method == 'POST':
         if 'file' not in request.files:
             return redirect(request.url)
@@ -118,7 +98,18 @@ def analyze_audio():
 
             trauma_state = detect_trauma(audio_text)
 
-        #     return trauma_state (success , 1) (harmful ,0)
+    return render_template('Voice.html')
+
+@app.route('/doctor')
+def doctor():
+    #pass me a map in a html  and the doctor name address and distance 
+    return render_template('Doctor.html')
+
+@app.route('/patient')
+def patient():
+    #frontend will send the patient details
+    return render_template('Patient.html',)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
