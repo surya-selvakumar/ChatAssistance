@@ -104,10 +104,31 @@ def chat():
        
     return render_template('Chat.html')
 
-@app.route('/voice')
+@app.route('/voice', methods=['POST', 'GET'])
 def voice():
-    return render_template('Voice.html')
 
+    states = {0:'From your audio feed, our model estimates that you in a traumatic state. Please visit the doctor connect page and book a consultation',
+              1:"From your audio feed, our model estimates that you are in a healthy state"}
+
+    if request.method == 'POST':
+        # Check if the 'audioFile' field is in the request form data
+        if 'audioFile' not in request.files:
+            return redirect(request.url)
+        
+        audio_obj = request.files['audioFile']
+
+        if audio_obj and audio_obj.filename:
+            filename = os.path.join(app.config['UPLOAD_FOLDER'], audio_obj.filename)
+
+            audio_obj.save(filename)
+
+            audio_text = audio_to_text(filename)
+
+        trauma_state = detect_trauma(audio_text)
+        response = {'msg': states.get(int(trauma_state))}
+        return jsonify(response)  # Return the response as JSON
+
+    return render_template('Voice.html')  
 @app.route('/doctor')
 def doctor():
     #pass me a map in a html  and the doctor name address and distance 
