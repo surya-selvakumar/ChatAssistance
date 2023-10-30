@@ -1,3 +1,3 @@
 {
-    "questions": ["Hi, How can I help you?", "Express your feelings to me, I'm here to listen!", "My model is analyzing your texts, you want anything to add?"]
+    "questions": ["Hi, How can I help you?", "Express your feelings to me, I'm here to listen!", "My model is analyzing your texts, you want anything to add?  If no please enter NA"]
 }

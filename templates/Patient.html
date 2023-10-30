@@ -99,6 +99,17 @@
       </div>
     </div>
 
+    
+    <div id="modal-overlay"></div>
+    <div class="modal" id="successModal">
+      <div class="modal-content">
+        <p class="modal-txt">{{msg}}</p>
+        <a href="/chat" style="text-decoration: none"
+          ><button class="modal-btn">Continue</button></a
+        >
+      </div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         // Get references to input fields and the save button
@@ -143,8 +154,17 @@
           })
             .then((response) => response.json())
             .then((data) => {
-              console.log("Data sent to /patient:", data);
-              // You can perform further actions here if needed
+              if (data.message) {
+                  // Set the "msg" received from the server in the modal content
+                  const modal = document.getElementById("successModal");
+                  const modalText = modal.querySelector(".modal-txt");
+                  modalText.textContent = data.message;
+
+                  // Display the modal
+                  modal.style.display = "block";
+                  document.getElementById("modal-overlay").style.display =
+                    "block";
+                }
             })
             .catch((error) => {
               console.error("Error sending data:", error);

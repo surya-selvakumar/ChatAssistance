@@ -59,7 +59,7 @@ def get_questions():
     questions = [
         'Hi, How can I help you?',
         'Express your feelings to me, I\'m here to listen!',
-        'My model is analyzing your texts, you want anything to add?'
+        'My model is analyzing your texts, you want anything to add? If no please enter NA'
     ]
     return jsonify(questions)
 
@@ -135,7 +135,7 @@ def patient():
 
         # You can process and store the data as needed
 
-        response = {'message': 'Data received successfully'}
+        response = {'message': 'Data received and saved  successfully'}
         return jsonify(response)
     
      

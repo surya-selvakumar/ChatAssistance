@@ -79,14 +79,16 @@
         <div>
           <h2>Details:</h2>
           <div class="details">
-            <iframe
+            <!-- <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22433.7605402935!2d-122.4194168743082!3d37.774929759525615!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085807b6f3d2027%3A0xf6a92469e82b0497!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1634707237569!5m2!1sen!2sus"
               width="500"
               height="500"
               style="border-radius: 12px; border: 0; margin-top: 50px"
               allowfullscreen=""
               loading="lazy"
-            ></iframe>
+            ></iframe> -->
+
+            {{map| safe}}
 
             <div class="address">
               <div>
@@ -113,7 +115,7 @@
                   />
                 </svg>
                 <label for="name">Name :</label>
-                <span>Chennai Corporation </span>
+                <span>{{name}}</span>
               </div>
 
               <div>
@@ -130,7 +132,7 @@
                   />
                 </svg>
                 <label for="name">Address :</label>
-                <span>Chetpet, Chennai </span>
+                <span>{{address}} </span>
               </div>
 
               <div>
@@ -147,7 +149,7 @@
                   />
                 </svg>
                 <label for="name">Distance :</label>
-                <span>2.3 KM </span>
+                <span>{{distance}} </span>
               </div>
 
               <button onclick="openModal()">Connect</button>
