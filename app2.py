@@ -5,25 +5,16 @@ from gtts import gTTS
 import speech_recognition as sr
 from transformers import pipeline
 import json
+import random
 import utils
 
 app = Flask(__name__)
 
 sentiment_model = pipeline('sentiment-analysis')
 
-try:
-    os.makedirs(app.instance_path)
-except:
-    pass
-
 
 with open('details.json', 'r') as f:
-    users = json.load(f)
-
-
-UPLOAD_FOLDER = os.path.join(app.instance_path, '/uploads')
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
+    users = json.load(f)['login']
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -61,6 +52,7 @@ def signup():
     
     return render_template('Signup.html')
 
+
 @app.route('/get_questions', methods=['GET'])
 def get_questions():
     questions = [
@@ -79,12 +71,9 @@ def chat():
     if request.method == 'POST':
         data = request.get_json()
         answers = data.get('answers')
-        print(answers)
         trauma_state_chat = utils.detect_trauma(" ".join(answers))
         response = {'msg': states.get(int(trauma_state_chat))}  
-        print("*************")
-        print(response)
-        return jsonify(response)  # Return the response as JSON
+        return jsonify(response)  
        
     return render_template('Chat.html')
 
@@ -103,8 +92,9 @@ def voice():
         audio_obj = request.files['audioFile']
 
         if audio_obj and audio_obj.filename:
-            filename = os.path.join(app.config['UPLOAD_FOLDER'], audio_obj.filename)
-
+            print("**********Inside IF")
+            filename = os.path.join(r"C:\Users\SURYA S\210623\TraumaChat\ChatAssistance\uploads", audio_obj.filename)
+            print("**********", filename)
             audio_obj.save(filename)
 
             audio_text = utils.audio_to_text(filename)
@@ -119,10 +109,17 @@ def voice():
 @app.route('/doctor')
 def doctor():
     #pass me a map in a html  and the doctor name address and distance 
-    lat, lng = 80.27, 131.27
-    res = utils.get_nearest(lat, lng)
+    res = utils.get_nearest(13.075393, 80.214797)
+    address = res['results'][0]['address']
+    distance = "{0:.2f} Km".format(res['results'][0]['distance']/100)
     m = utils.create_map(res)
+    # print(m)
     m.save('map.html')
+    with open('map.html', 'r') as mp:
+        map_html = mp.read()
+
+    response = {'map':map_html, 'name':utils.fetch_details(), 'address':address, 'distance':distance}
+
     return render_template('Doctor.html')
 
 

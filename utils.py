@@ -7,6 +7,7 @@ from gtts import gTTS
 import speech_recognition as sr
 from transformers import pipeline
 import json
+import random
 
 sentiment_model = pipeline('sentiment-analysis')
 
@@ -33,17 +34,23 @@ def get_route(lat1, long1, lat2, long2):
 
 
 def create_map(response):
-    mls = response.json()['route']['geometry']['coordinates']
-    points = [(mls[i][0], mls[i][1]) for i in range(len(mls))]
-    m = folium.Map()
-    for point in [points[0], points[-1]]:
-        folium.Marker(point).add_to(m)
-    folium.PolyLine(points, weight=5, opacity=1).add_to(m)
-    df = pd.DataFrame(mls).rename(columns={0: 'Lon', 1: 'Lat'})[['Lat', 'Lon']]
-    sw = df[['Lon', 'Lat']].min().values.tolist()
-    ne = df[['Lon', 'Lat']].max().values.tolist()
-    m.fit_bounds([sw, ne])
+    location = response['results'][0]['location']
+    lat, lng = location['lat'], location['lng']
+
+    # Create a map centered on the given location with a starting zoom level of, say, 15.
+    m = folium.Map(location=(lat, lng), zoom_start=15)
+
+    folium.Marker((lat, lng)).add_to(m)
+
     return m
+
+
+def fetch_details():
+    with open('details.json', 'r') as fd:
+        jf = json.load(fd)
+
+    dc_details = jf['doctor_names']
+    return dc_details[random.randint(0, len(dc_details))]
 
 
 def get_nearest(my_lat, my_long):
