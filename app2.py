@@ -7,6 +7,7 @@ from transformers import pipeline
 import json
 import random
 import utils
+from pydub import AudioSegment
 
 app = Flask(__name__)
 
@@ -92,15 +93,17 @@ def voice():
         audio_obj = request.files['audioFile']
 
         if audio_obj and audio_obj.filename:
-            print("**********Inside IF")
             filename = os.path.join(r"C:\Users\SURYA S\210623\TraumaChat\ChatAssistance\uploads", audio_obj.filename)
-            print("**********", filename)
             audio_obj.save(filename)
 
-            audio_text = utils.audio_to_text(filename)
+            sound = AudioSegment.from_mp3(filename)
+            sound.export("transcript.wav", format="wav")
+
+            audio_text = utils.audio_to_text("transcript.wav")
 
         trauma_state = utils.detect_trauma(audio_text)
         response = {'msg': states.get(int(trauma_state))}
+        print(response)
         return jsonify(response)  # Return the response as JSON
 
     return render_template('Voice.html')  
