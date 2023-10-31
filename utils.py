@@ -68,8 +68,8 @@ def format_content(data):
     )
 
 def send_email(mail_receiver):
-    mail_sender = 'surya8428sm@gmail.com'
-    mail_password = 'fjkm gyky rant jpli'
+    mail_sender = ''
+    mail_password = ''
     subject = 'Patient Appointment'
 
     em = EmailMessage()
