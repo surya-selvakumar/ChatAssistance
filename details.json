@@ -1,3 +1,4 @@
 {
-    "user": "password"
+    "login":{"user@gmail.com": "password"},
+    "doctor": {"names":["DR.Patel"], "email":["surya.creatorslab@gmail.com"]}
 }

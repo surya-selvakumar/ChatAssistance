@@ -8,6 +8,10 @@ import speech_recognition as sr
 from transformers import pipeline
 import json
 import random
+import geocoder
+from email.message import EmailMessage
+import ssl
+import smtplib
 
 sentiment_model = pipeline('sentiment-analysis')
 
@@ -44,13 +48,54 @@ def create_map(response):
 
     return m
 
+def get_lat_lng():
+    g = geocoder.ip('me')
+    return g.latlng
+
+
+def format_content(data):
+    """Format the content dictionary into a neat string."""
+    return (
+        f"Name: {data['name']}\n"
+        f"Age: {data['age']}\n"
+        f"Gender: {data['gender']}\n"
+        f"Blood Group: {data['bloodGroup']}\n"
+        f"Date of Birth: {data['dateOfBirth']}\n"
+        f"Phone: {data['phone']}\n"
+        f"Department: {data['department']}\n"
+        f"Date & Time: {data['dateTime']}\n"
+        f"Consultant: {data['consultant']}"
+    )
+
+def send_email(mail_receiver):
+    mail_sender = 'surya8428sm@gmail.com'
+    mail_password = 'fjkm gyky rant jpli'
+    subject = 'Patient Appointment'
+
+    em = EmailMessage()
+    em['From'] = mail_sender
+    em['To'] = mail_receiver
+    em['Subject'] = subject  # Corrected the key to 'Subject'
+
+    with open("patient_data.json", "r") as jfd:
+        cont = json.load(jfd)
+
+    # Set the formatted body content to the email
+    em.set_content(format_content(cont))
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(mail_sender, mail_password)
+        smtp.send_message(em)
+
 
 def fetch_details():
     with open('details.json', 'r') as fd:
         jf = json.load(fd)
 
-    dc_details = jf['doctor_names']
-    return dc_details[random.randint(0, len(dc_details))]
+    dc_nm = jf['doctor']["names"]
+    idx = random.randint(0, len(dc_nm)-1)
+    return dc_nm[idx], jf['doctor']['email'][idx]
 
 
 def get_nearest(my_lat, my_long):

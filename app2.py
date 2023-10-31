@@ -111,19 +111,24 @@ def voice():
 
 @app.route('/doctor')
 def doctor():
-    #pass me a map in a html  and the doctor name address and distance 
-    res = utils.get_nearest(13.075393, 80.214797)
+    #pass me a map in a html  and the doctor name address and distance
+    lat, lng = utils.get_lat_lng() 
+    res = utils.get_nearest(lat, lng)
     address = res['results'][0]['address']
     distance = "{0:.2f} Km".format(res['results'][0]['distance']/100)
     m = utils.create_map(res)
-    # print(m)
-    m.save('map.html')
-    with open('map.html', 'r') as mp:
-        map_html = mp.read()
+    dc_name, dc_email = utils.fetch_details()
+    response = {'map':m._repr_html_(), 'name': dc_name, 'address':address, 'distance':distance}
+    if response:
+        send_email(dc_name, dc_email)
 
-    response = {'map':map_html, 'name':utils.fetch_details(), 'address':address, 'distance':distance}
+    return render_template('Doctor.html', map=response['map'], name = response['name'], address=address, distance=distance)
 
-    return render_template('Doctor.html')
+
+@app.route('/email')
+def send_email(dc_name, dc_email):
+    utils.send_email(dc_email)
+    return
 
 
 @app.route('/patient' , methods=['POST', 'GET'])
@@ -131,9 +136,10 @@ def patient():
     if request.method == 'POST':
         data = request.get_json()  # Get the JSON data from the request
         print("Data received from the form:")
-        print(data)  # Print the received data
+        print(data)  
 
-        # You can process and store the data as needed
+        with open('patient_data.json', 'w') as jfk:
+            json.dump(data, jfk)
 
         response = {'message': 'Data received and saved  successfully'}
         return jsonify(response)
