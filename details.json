@@ -1,4 +1,4 @@
 {
     "login":{"user@gmail.com": "password"},
-    "doctor": {"names":["DR.Patel"], "email":[""]}
+    "doctor": {"names":["DR.Patel", "Dr.Yasmin"], "email":[""]}
 }
